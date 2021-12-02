@@ -55,25 +55,8 @@ public class TupleDesc implements Serializable {
      * */
 
     public Iterator<TDItem> iterator() {
-        Iterator<TDItem> toIter = new Iterator<TDItem>(){
-            private int currentIndex = 0;
-
-            public boolean hasNext(){
-                if(currentIndex < size){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }
-
-            public TDItem next(){
-                return TDArray[currentIndex++];
-            }
-
-
-        };
-        return toIter;
+        List<TDItem> TDArrayList = Arrays.asList(this.TDArray);
+        return TDArrayList.iterator();
     }
 
     private static final long serialVersionUID = 1L;
@@ -90,19 +73,12 @@ public class TupleDesc implements Serializable {
      *            be null.
      */
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
-       List<TDItem> arrList = new ArrayList<TDItem>(Arrays.asList(TDArray));
-       String field;
+       List<TDItem> arrList = new ArrayList<TDItem>();
        for(int i=0; i<typeAr.length; i++) {
-           //arrList.add(new TDItem(typeAr[i], fieldAr[i]));
-           if (fieldAr[i] == null) {
-               field = "";
-           } else {
-               field = fieldAr[i];
-           }
-
-           arrList.add(new TDItem(typeAr[i], field));
+           arrList.add(new TDItem(typeAr[i], fieldAr[i]));
        }
-       this.TDArray = arrList.toArray(TDArray);
+       //this.TDArray = arrList.toArray(TDArray);
+       this.TDArray = arrList.toArray(new TDItem[arrList.size()]);
        this.size= TDArray.length;
     }
 
@@ -115,14 +91,15 @@ public class TupleDesc implements Serializable {
      *            TupleDesc. It must contain at least one entry.
      */
     public TupleDesc(Type[] typeAr) {
-        List<TDItem> arrList = new ArrayList<TDItem>(Arrays.asList(TDArray));
+        List<TDItem> arrList = new ArrayList<TDItem>();
 
-        String field="";
         for(int i=0; i<typeAr.length; i++){
-            arrList.add(new TDItem(typeAr[i], field));  // null or empty string ?
+            arrList.add(new TDItem(typeAr[i], null));  // null or empty string ?
 
         }
-        this.TDArray = arrList.toArray(TDArray);
+
+        //this.TDArray = arrList.toArray(TDArray);
+        this.TDArray = arrList.toArray(new TDItem[arrList.size()]);
         this.size= TDArray.length;
     }
 
@@ -172,6 +149,12 @@ public class TupleDesc implements Serializable {
      *             if no field with a matching name is found.
      */
     public int fieldNameToIndex(String name) throws NoSuchElementException {
+        if(name == null) throw new NoSuchElementException("Name is null");
+        int countNullNames = 0;
+        for(int i=0; i<this.TDArray.length; i++){
+            if(this.TDArray[i].fieldName == null) countNullNames++;
+        }
+        if (countNullNames == this.TDArray.length) throw new NoSuchElementException("All field names are null");
         for (int i=0; i<this.TDArray.length; i++){
             if(name.equals(this.TDArray[i].fieldName)){
                 return i;
@@ -242,6 +225,9 @@ public class TupleDesc implements Serializable {
      */
 
     public boolean equals(Object o) {
+        // return false if the object is null or if it's not TupleDesc
+        if(o == null) return false;
+        if (o instanceof TupleDesc == false) return false;
         TupleDesc otd = (TupleDesc) o;
         boolean flag = false;
         if (otd.getSize() == this.getSize()){
