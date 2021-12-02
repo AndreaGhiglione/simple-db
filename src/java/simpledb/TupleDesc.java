@@ -37,14 +37,10 @@ public class TupleDesc implements Serializable {
     }
 
     private TDItem[] TDArray;
-    private int size;
+    private int length;
 
     public TDItem[] getTDArray(){
         return this.TDArray;
-    }
-
-    public int getSizeNoBytes(){
-        return this.size;
     }
 
 
@@ -79,7 +75,7 @@ public class TupleDesc implements Serializable {
        }
        //this.TDArray = arrList.toArray(TDArray);
        this.TDArray = arrList.toArray(new TDItem[arrList.size()]);
-       this.size= TDArray.length;
+       this.length= TDArray.length;
     }
 
     /**
@@ -100,14 +96,14 @@ public class TupleDesc implements Serializable {
 
         //this.TDArray = arrList.toArray(TDArray);
         this.TDArray = arrList.toArray(new TDItem[arrList.size()]);
-        this.size= TDArray.length;
+        this.length= TDArray.length;
     }
 
     /**
      * @return the number of fields in this TupleDesc
      */
     public int numFields() {
-        return this.size;
+        return this.length;
     }
 
     /**
@@ -120,7 +116,7 @@ public class TupleDesc implements Serializable {
      *             if i is not a valid field reference.
      */
     public String getFieldName(int i) throws NoSuchElementException {
-        if (i < 0 || i > this.size) throw new NoSuchElementException("Index out of range");
+        if (i < 0 || i > this.length) throw new NoSuchElementException("Index out of range");
         return this.TDArray[i].fieldName;
     }
 
@@ -135,7 +131,7 @@ public class TupleDesc implements Serializable {
      *             if i is not a valid field reference.
      */
     public Type getFieldType(int i) throws NoSuchElementException {
-        if (i < 0 || i > this.size) throw new NoSuchElementException("Index out of range");
+        if (i < 0 || i > this.length) throw new NoSuchElementException("Index out of range");
         return this.TDArray[i].fieldType;
     }
 
@@ -163,10 +159,6 @@ public class TupleDesc implements Serializable {
         throw new NoSuchElementException("Name not found");
     }
 
-    /** TODO fieldNameToIndex
-     * Do some checks on all fields being null ? On name being null ?
-     */
-
     /**
      * @return The size (in bytes) of tuples corresponding to this TupleDesc.
      *         Note that tuples from a given TupleDesc are of a fixed size.
@@ -174,7 +166,7 @@ public class TupleDesc implements Serializable {
     public int getSize() {
         int totalSize = 0;
         for(int i = 0; i< TDArray.length; i++){
-            totalSize += TDArray[i].fieldType.getLen();  // getLen() from Type.java
+            totalSize += TDArray[i].fieldType.getLen();
         }
         return totalSize;
     }
@@ -184,7 +176,7 @@ public class TupleDesc implements Serializable {
      * **/
     public TupleDesc(TDItem[] td){
         this.TDArray = Arrays.copyOf(td, td.length);
-        this.size=td.length;
+        this.length=td.length;
     }
 
     /**
@@ -232,7 +224,7 @@ public class TupleDesc implements Serializable {
         boolean flag = false;
         if (otd.getSize() == this.getSize()){
             flag = true;
-            for(int i=0; i< otd.size; i++){
+            for(int i=0; i< otd.length; i++){
                 if (!otd.getFieldType(i).equals(this.getFieldType(i))){
                     flag = false;
                     break;
@@ -240,20 +232,6 @@ public class TupleDesc implements Serializable {
             }
         }
         return flag;
-
-        /**TDItem[] o_arr = (TDItem[]) o;
-        boolean flag=true;
-        if (this.TDArray.length == o_arr.length){
-            for (int i=0; i<TDArray.length; i++){
-                if(!TDArray[i].fieldType.equals(o_arr[i].fieldType)){
-                    flag=false;
-                }
-            }
-        }
-        else{
-            flag=false;
-        }
-        return flag;**/
     }
 
     public int hashCode() {
