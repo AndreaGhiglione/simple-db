@@ -70,7 +70,24 @@ public class Catalog {
      */
     public void addTable(DbFile file, String name, String pkeyField) {
         // some code goes here
-        getTables().add(new Table(file, name, pkeyField));
+        boolean addition = false;
+        for(int i=0; i<getTables().size(); i++){
+            if(getTables().get(i).getFile().getId() == file.getId()){
+                // same id, keep only last table
+                getTables().remove(i);
+                getTables().add(new Table(file, name, pkeyField));
+                addition = true;
+                break;
+            }
+            else if(getTables().get(i).getName().equals(name)){
+                // same name, keep only last table
+                getTables().remove(i);
+                getTables().add(new Table(file, name, pkeyField));
+                addition = true;
+                break;
+            }
+        }
+        if(!addition) getTables().add(new Table(file, name, pkeyField));
     }
 
     public void addTable(DbFile file, String name) {
