@@ -44,7 +44,7 @@ public class Catalog {
         }
     }
 
-    ArrayList<Table> tables = new ArrayList<Table>();
+    private ArrayList<Table> tables;
 
     public ArrayList<Table> getTables() {
         return this.tables;
@@ -56,7 +56,7 @@ public class Catalog {
      */
     public Catalog() {
         // some code goes here
-        // TODO
+        this.tables = new ArrayList<Table>();
     }
 
     /**
