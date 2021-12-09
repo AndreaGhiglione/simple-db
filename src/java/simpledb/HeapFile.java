@@ -1,5 +1,6 @@
 package simpledb;
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 
@@ -71,7 +72,25 @@ public class HeapFile implements DbFile {
     // see DbFile.java for javadocs
     public Page readPage(PageId pid) {
         // some code goes here
-        return null;
+        // we calculate offset by multiplying the page size by the page number
+        int offset = BufferPool.getPageSize() * pid.getPageNumber();
+        byte[] pageContent = new byte[BufferPool.getPageSize()];
+        Page pageToReturn = null;
+        try {
+            RandomAccessFile fileToRead = new RandomAccessFile(this.f, "r");
+            fileToRead.seek(offset);
+            fileToRead.read(pageContent);
+            fileToRead.close();
+            pageToReturn = new HeapPage((HeapPageId) pid, pageContent);
+        }
+        catch(FileNotFoundException f){
+            System.out.println("File not found");
+        }
+        catch(IOException i){
+            System.out.println("Wrong offset");
+        }
+
+        return pageToReturn;
     }
 
     // see DbFile.java for javadocs
@@ -85,7 +104,7 @@ public class HeapFile implements DbFile {
      */
     public int numPages() {
         // some code goes here
-        return 0;
+        return (int) Math.ceil(this.f.length() / BufferPool.getPageSize());
     }
 
     // see DbFile.java for javadocs
