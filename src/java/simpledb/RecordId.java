@@ -74,7 +74,7 @@ public class RecordId implements Serializable {
     public int hashCode() {
         // some code goes here
         // throw new UnsupportedOperationException("implement this");
-        return (int) this.pid.getPageNumber() + this.tupleno;
+        return Integer.valueOf("" + this.pid.getPageNumber() + this.tupleno);
     }
 
 }
