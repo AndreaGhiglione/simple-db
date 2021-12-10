@@ -55,7 +55,7 @@ public class HeapFile implements DbFile {
     public int getId() {
         // some code goes here
         // throw new UnsupportedOperationException("implement this");
-        return this.f.getAbsoluteFile().hashCode();
+        return this.f.getAbsoluteFile().hashCode();  // this is the tableId (also the HeapFileId since there is 1 HeapFile per Table)
     }
 
     /**
@@ -126,7 +126,11 @@ public class HeapFile implements DbFile {
     // see DbFile.java for javadocs
     public DbFileIterator iterator(TransactionId tid) {
         // some code goes here
-        return null;
+        // take the tableId of this HeapFile (getId) , go to BufferPool and iterate over PageIds; if a pageId has a TableId (getTableId) == getId then we take that page to
+        // start iterating
+
+        return new HeapFileIterator(this, tid);
+
     }
 
 }
