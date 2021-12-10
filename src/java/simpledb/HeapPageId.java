@@ -44,7 +44,8 @@ public class HeapPageId implements PageId {
     public int hashCode() {
         // some code goes here
         // throw new UnsupportedOperationException("implement this");
-        return Integer.valueOf("" + this.getTableId() + this.getPageNumber());
+        String s = "" + this.getTableId() + this.getPageNumber(); // may be too long, we do hashcode of this String to save it as int
+        return s.hashCode();
     }
 
     /**
