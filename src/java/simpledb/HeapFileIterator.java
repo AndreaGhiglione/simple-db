@@ -61,7 +61,7 @@ public class HeapFileIterator extends AbstractDbFileIterator{
         if(this.tupleIterat.hasNext())
             return this.tupleIterat.next();
         else{
-            if(currPage + 1 <= this.numPages){
+            if(currPage + 1 < this.numPages){
                 this.currPage = this.currPage + 1;
                 this.HeapPageIdStart = new HeapPageId(this.heapFile.getId(), this.currPage);
                 try{
