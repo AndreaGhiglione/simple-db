@@ -4,8 +4,6 @@ import java.util.*;
 
 public class HeapFileIterator extends AbstractDbFileIterator{
 
-    //private HeapPage PageStart;
-    //private HeapPageId PageStartId;
     private TransactionId tid;
     private HeapPageId HeapPageIdStart;
     private HeapPage HeapPageStart;
