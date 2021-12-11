@@ -302,6 +302,9 @@ public class HeapPage implements Page {
         // some code goes here
         int byteNumber = (int) Math.ceil(i / 8);
         int bitNumber = i % 8;
+        if (byteNumber >= header.length || byteNumber < 0) {
+            return false;
+        }
         return ((int) header[byteNumber] << ~bitNumber < 0);  // check if bitNumber is 1 (big-endian)
     }
 
