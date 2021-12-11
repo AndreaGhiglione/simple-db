@@ -86,4 +86,13 @@ public class HeapFileIterator extends AbstractDbFileIterator{
             }
         }
     }
+
+    @Override
+    public void close() {
+        // Ensures that a future call to next() will fail
+        super.close();
+        this.tupleIterat = null;
+        this.currPage = 0;
+
+    }
 }
