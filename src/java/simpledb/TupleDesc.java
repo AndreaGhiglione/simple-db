@@ -36,6 +36,7 @@ public class TupleDesc implements Serializable {
         }
     }
 
+    /** Our addition **/
     private TDItem[] TDArray;
     private int length;
 
@@ -51,6 +52,7 @@ public class TupleDesc implements Serializable {
      * */
 
     public Iterator<TDItem> iterator() {
+        // some code goes here
         List<TDItem> TDArrayList = Arrays.asList(this.TDArray);
         return TDArrayList.iterator();
     }
@@ -69,6 +71,7 @@ public class TupleDesc implements Serializable {
      *            be null.
      */
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
+        // some code goes here
        List<TDItem> arrList = new ArrayList<TDItem>();
        for(int i=0; i<typeAr.length; i++) {
            arrList.add(new TDItem(typeAr[i], fieldAr[i]));
@@ -87,14 +90,14 @@ public class TupleDesc implements Serializable {
      *            TupleDesc. It must contain at least one entry.
      */
     public TupleDesc(Type[] typeAr) {
+        // some code goes here
         List<TDItem> arrList = new ArrayList<TDItem>();
 
         for(int i=0; i<typeAr.length; i++){
-            arrList.add(new TDItem(typeAr[i], null));  // null or empty string ?
+            arrList.add(new TDItem(typeAr[i], null));
 
         }
 
-        //this.TDArray = arrList.toArray(TDArray);
         this.TDArray = arrList.toArray(new TDItem[arrList.size()]);
         this.length= TDArray.length;
     }
@@ -103,6 +106,7 @@ public class TupleDesc implements Serializable {
      * @return the number of fields in this TupleDesc
      */
     public int numFields() {
+        // some code goes here
         return this.length;
     }
 
@@ -116,6 +120,7 @@ public class TupleDesc implements Serializable {
      *             if i is not a valid field reference.
      */
     public String getFieldName(int i) throws NoSuchElementException {
+        // some code goes here
         if (i < 0 || i > this.length) throw new NoSuchElementException("Index out of range");
         return this.TDArray[i].fieldName;
     }
@@ -131,6 +136,7 @@ public class TupleDesc implements Serializable {
      *             if i is not a valid field reference.
      */
     public Type getFieldType(int i) throws NoSuchElementException {
+        // some code goes here
         if (i < 0 || i > this.length) throw new NoSuchElementException("Index out of range");
         return this.TDArray[i].fieldType;
     }
@@ -145,6 +151,7 @@ public class TupleDesc implements Serializable {
      *             if no field with a matching name is found.
      */
     public int fieldNameToIndex(String name) throws NoSuchElementException {
+        // some code goes here
         if(name == null) throw new NoSuchElementException("Name is null");
         int countNullNames = 0;
         for(int i=0; i<this.TDArray.length; i++){
@@ -164,6 +171,7 @@ public class TupleDesc implements Serializable {
      *         Note that tuples from a given TupleDesc are of a fixed size.
      */
     public int getSize() {
+        // some code goes here
         int totalSize = 0;
         for(int i = 0; i< TDArray.length; i++){
             totalSize += TDArray[i].fieldType.getLen();
@@ -171,10 +179,9 @@ public class TupleDesc implements Serializable {
         return totalSize;
     }
 
-    /**
-     * Our addition
-     * **/
+    /** Our addition **/
     public TupleDesc(TDItem[] td){
+        // some code goes here
         this.TDArray = Arrays.copyOf(td, td.length);
         this.length=td.length;
     }
@@ -190,17 +197,13 @@ public class TupleDesc implements Serializable {
      * @return the new TupleDesc
      */
     public static TupleDesc merge(TupleDesc td1, TupleDesc td2) {
-        /**int mergeSize = td1.size + td2.size;
-        String[] mergeFieldsAr = new String[mergeSize];
-        Type[] mergeTypeAr = new Type[mergeSize]; .......**/
-
+        // some code goes here
         TDItem[] TDArray1 = td1.getTDArray();
         TDItem[] TDArray2 = td2.getTDArray();
         TDItem[] tdReturn = new TDItem[TDArray1.length + TDArray2.length];
         System.arraycopy(TDArray1, 0, tdReturn, 0, TDArray1.length);
         System.arraycopy(TDArray2, 0, tdReturn, TDArray1.length, TDArray2.length);
         TupleDesc toReturn = new TupleDesc(tdReturn);
-
         return toReturn;
     }
 
@@ -217,6 +220,7 @@ public class TupleDesc implements Serializable {
      */
 
     public boolean equals(Object o) {
+        // some code goes here
         // return false if the object is null or if it's not TupleDesc
         if(o == null) return false;
         if (o instanceof TupleDesc == false) return false;
@@ -248,9 +252,10 @@ public class TupleDesc implements Serializable {
      * @return String describing this descriptor.
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for(int i =0; i<this.TDArray.length; i++){
-            sb.append(TDArray.toString());
+        // some code goes here
+        StringBuffer sb = new StringBuffer();
+        for(TDItem td : this.TDArray){
+            sb.append(td.toString()).append(", ");
         }
 
         return sb.toString();

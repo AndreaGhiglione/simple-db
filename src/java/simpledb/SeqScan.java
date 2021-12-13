@@ -1,8 +1,6 @@
 package simpledb;
 
 import java.util.*;
-/** Our addition **/
-import simpledb.TupleDesc.TDItem;  // we need to import this because of getTupleDesc()
 
 /**
  * SeqScan is an implementation of a sequential scan access method that reads
