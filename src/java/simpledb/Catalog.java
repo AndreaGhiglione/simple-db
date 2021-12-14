@@ -111,6 +111,9 @@ public class Catalog {
      */
     public int getTableId(String name) throws NoSuchElementException {
         // some code goes here
+        if(name == null){
+            throw new NoSuchElementException("Null name");
+        }
         boolean not_found = true;
         int id = 0;
         Table table;
