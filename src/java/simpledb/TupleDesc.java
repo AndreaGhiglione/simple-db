@@ -72,11 +72,13 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
         // some code goes here
+        if (typeAr.length == 0 || typeAr.length != fieldAr.length) {
+            throw new IllegalArgumentException();
+        }
        List<TDItem> arrList = new ArrayList<TDItem>();
        for(int i=0; i<typeAr.length; i++) {
            arrList.add(new TDItem(typeAr[i], fieldAr[i]));
        }
-       //this.TDArray = arrList.toArray(TDArray);
        this.TDArray = arrList.toArray(new TDItem[arrList.size()]);
        this.length= TDArray.length;
     }
@@ -91,6 +93,9 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr) {
         // some code goes here
+        if (typeAr.length == 0) {
+            throw new IllegalArgumentException("No entries in typeAr");  // it must contain at least one entry
+        }
         List<TDItem> arrList = new ArrayList<TDItem>();
 
         for(int i=0; i<typeAr.length; i++){
@@ -241,7 +246,8 @@ public class TupleDesc implements Serializable {
     public int hashCode() {
         // If you want to use TupleDesc as keys for HashMap, implement this so
         // that equal objects have equals hashCode() results
-        throw new UnsupportedOperationException("unimplemented");
+        // throw new UnsupportedOperationException("unimplemented");
+        return this.toString().hashCode();
     }
 
     /**
