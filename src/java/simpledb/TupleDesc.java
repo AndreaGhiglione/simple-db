@@ -126,7 +126,7 @@ public class TupleDesc implements Serializable {
      */
     public String getFieldName(int i) throws NoSuchElementException {
         // some code goes here
-        if (i < 0 || i > this.length) throw new NoSuchElementException("Index out of range");
+        if (i < 0 || i >= this.length) throw new NoSuchElementException("Index out of range");
         return this.TDArray[i].fieldName;
     }
 
@@ -142,7 +142,7 @@ public class TupleDesc implements Serializable {
      */
     public Type getFieldType(int i) throws NoSuchElementException {
         // some code goes here
-        if (i < 0 || i > this.length) throw new NoSuchElementException("Index out of range");
+        if (i < 0 || i >= this.length) throw new NoSuchElementException("Index out of range");
         return this.TDArray[i].fieldType;
     }
 

@@ -47,7 +47,8 @@ public class SeqScan implements OpIterator {
      *       be the actual name of the table in the catalog of the database
      * */
     public String getTableName() {
-        return null;
+        // It was not specified to add code here, however we assumed that we had to write code here
+        return Database.getCatalog().getTableName(this.tableid);
     }
 
     /**
