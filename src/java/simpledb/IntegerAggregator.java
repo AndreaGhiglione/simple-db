@@ -145,7 +145,7 @@ public class IntegerAggregator implements Aggregator {
                     f = new IntField(this.groupCountMap.get(null));
                     break;
                 case AVG:
-                    f = new IntField((int) Math.floor(this.groupAggMap.get(null) / this.groupCountMap.get(null)) + 10);
+                    f = new IntField(this.groupAggMap.get(null) / this.groupCountMap.get(null));
                     break;
                 default:
                     f = new IntField(this.groupAggMap.get(null));
@@ -172,7 +172,7 @@ public class IntegerAggregator implements Aggregator {
                         f = new IntField(this.groupCountMap.get(group_key));
                         break;
                     case AVG:
-                        f = new IntField((int) Math.floor(this.groupAggMap.get(group_key) / this.groupCountMap.get(group_key)));
+                        f = new IntField(this.groupAggMap.get(group_key) / this.groupCountMap.get(group_key));
                         break;
                     default:
                         f = new IntField(this.groupAggMap.get(group_key));
