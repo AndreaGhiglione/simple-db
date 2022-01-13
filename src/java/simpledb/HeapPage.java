@@ -20,12 +20,13 @@ public class HeapPage implements Page {
     final byte header[];
     final Tuple tuples[];
     final int numSlots;
-    /** Addition lab2 **/
-    private boolean dirtyFlag;
-    private TransactionId tid;
 
     byte[] oldData;
     private final Byte oldDataLock=new Byte((byte)0);
+
+    /** Our addition lab2 **/
+    private boolean dirtyFlag;
+    private TransactionId tid;
 
     /**
      * Create a HeapPage from a set of bytes of data read from disk.

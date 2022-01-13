@@ -154,6 +154,17 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        DbFile dbf = Database.getCatalog().getDatabaseFile(tableId);
+        // we get all the pages that we have to set as dirty due to the insertion of the tuples
+        ArrayList<Page> pagesToBeDirtied = dbf.insertTuple(tid, t);
+        // we iterate over them, marking them as dirty
+        Page currPage;
+        for (int i = 0; i < pagesToBeDirtied.size(); i++){
+            currPage = pagesToBeDirtied.get(i);
+            discardPage(currPage.getId());// remove the page from the bufferPool
+            currPage.markDirty(true, tid);
+            this.pages.put(currPage.getId(), currPage); // add up-to-date page
+        }
     }
 
     /**
@@ -173,6 +184,15 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        Page currPage;
+        DbFile dbf = Database.getCatalog().getDatabaseFile(t.getRecordId().getPageId().getTableId());
+        ArrayList<Page> pagesToBeDirtied = dbf.deleteTuple(tid, t);
+        for (int i = 0; i < pagesToBeDirtied.size(); i++) {
+            currPage = pagesToBeDirtied.get(i);
+            discardPage(currPage.getId());
+            currPage.markDirty(true, tid);
+            this.pages.put(currPage.getId(), currPage);
+        }
     }
 
     /**
