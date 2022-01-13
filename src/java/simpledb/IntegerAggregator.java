@@ -68,14 +68,14 @@ public class IntegerAggregator implements Aggregator {
                 val = this.groupAggMap.get(null);
                 switch(this.what){
                     case COUNT:
-                        this.groupCountMap.put(null, val + 1);
+                        this.groupCountMap.put(null, this.groupCountMap.get(field) + 1);
                         break;
                     case SUM:
                         this.groupAggMap.put(null, val + fieldValue);
                         break;
                     case AVG:
                         this.groupAggMap.put(null, val + fieldValue);
-                        this.groupCountMap.put(null, val + 1);
+                        this.groupCountMap.put(null, this.groupCountMap.get(field) + 1);
                         break;
                     case MIN:
                         this.groupAggMap.put(null, Math.min(val, fieldValue));
@@ -96,14 +96,14 @@ public class IntegerAggregator implements Aggregator {
                 val = this.groupAggMap.get(field);
                 switch (this.what) {
                     case COUNT:
-                        this.groupCountMap.put(field, val + 1);
+                        this.groupCountMap.put(field, this.groupCountMap.get(field) + 1);
                         break;
                     case SUM:
                         this.groupAggMap.put(field, val + fieldValue);
                         break;
                     case AVG:
                         this.groupAggMap.put(field, val + fieldValue);
-                        this.groupCountMap.put(field, val + 1);
+                        this.groupCountMap.put(field, this.groupCountMap.get(field) + 1);
                         break;
                     case MIN:
                         this.groupAggMap.put(field, Math.min(val, fieldValue));
@@ -145,7 +145,7 @@ public class IntegerAggregator implements Aggregator {
                     f = new IntField(this.groupCountMap.get(null));
                     break;
                 case AVG:
-                    f = new IntField((int) Math.floor(this.groupAggMap.get(null) / this.groupCountMap.get(null)));
+                    f = new IntField((int) Math.floor(this.groupAggMap.get(null) / this.groupCountMap.get(null)) + 10);
                     break;
                 default:
                     f = new IntField(this.groupAggMap.get(null));
