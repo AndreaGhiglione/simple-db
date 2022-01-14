@@ -68,6 +68,11 @@ public class HeapPage implements Page {
         setBeforeImage();
     }
 
+    /** Our addition lab2 **/
+    public TransactionId getTid() {
+        return tid;
+    }
+
     /** Retrieve the number of tuples on this page.
         @return the number of tuples on this page
     */

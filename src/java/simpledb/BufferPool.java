@@ -1,5 +1,6 @@
 package simpledb;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 
 import java.util.ArrayList;
@@ -203,7 +204,8 @@ public class BufferPool {
     public synchronized void flushAllPages() throws IOException {
         // some code goes here
         // not necessary for lab1
-
+        for(PageId pid : this.pages.keySet())
+            flushPage(pid);
     }
 
     /** Remove the specific page id from the buffer pool.
@@ -217,6 +219,7 @@ public class BufferPool {
     public synchronized void discardPage(PageId pid) {
         // some code goes here
         // not necessary for lab1
+        this.pages.remove(pid);
     }
 
     /**
@@ -226,6 +229,15 @@ public class BufferPool {
     private synchronized  void flushPage(PageId pid) throws IOException {
         // some code goes here
         // not necessary for lab1
+        HeapPage hp = (HeapPage) this.pages.get(pid);
+        if(hp.isDirty() != null){
+            // write the dirty page on disk
+            DbFile dbf = Database.getCatalog().getDatabaseFile(pid.getTableId());
+            dbf.writePage(hp);
+            // mark the page as not dirty
+            hp.markDirty(false, hp.getTid());
+        }
+
     }
 
     /** Write all pages of the specified transaction to disk.
@@ -242,6 +254,31 @@ public class BufferPool {
     private synchronized  void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
+        ArrayList<HeapPageId> dirtyHeapPagesId = new ArrayList<>();
+        HeapPageId hpid;
+        for(PageId pid : this.pages.keySet()){
+            hpid = (HeapPageId) pid;
+            if(this.pages.get(hpid).isDirty() != null)
+                dirtyHeapPagesId.add((HeapPageId) pid);
+        }
+        // pick a random page to evict
+        double randNum = Math.random();
+        // map it between 0 and length of the arraylist of dirty pages
+        randNum = randNum * dirtyHeapPagesId.size();
+        // cast to int to get the index of the page to evict
+        int randInd = (int) randNum;
+        if(dirtyHeapPagesId.size() != 0){
+            PageId idToEvict = dirtyHeapPagesId.get(randInd);
+            // flush and discard the page
+            try{
+                flushPage(idToEvict);  // handle IOException
+                discardPage(idToEvict);
+            }
+            catch(IOException e){
+                throw new DbException("Failed to flush");
+            }
+        }
+
     }
 
 }
