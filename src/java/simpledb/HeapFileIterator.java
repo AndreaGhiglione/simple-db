@@ -19,70 +19,41 @@ public class HeapFileIterator extends AbstractDbFileIterator{
         this.numPages = this.heapFile.numPages();
     }
 
-    public void open(){
-        // we create a pid by using this tableId and pageNumber=0, then we do a getPage in the BufferPool
-        this.currPage = 0;
-        this.HeapPageIdStart = new HeapPageId(this.heapFile.getId(), this.currPage);
-        try{
-            this.HeapPageStart = (HeapPage) Database.getBufferPool().getPage(this.tid, HeapPageIdStart, Permissions.READ_ONLY);;
-            this.tupleIterat = HeapPageStart.iterator();
-        }
-        catch (TransactionAbortedException a){
-            System.out.println("Transaction Aborted Exception");
-        }
-        catch (DbException d){
-            System.out.println("Too many pages have been requested");
-        }
-
-
+    /**
+     * Open the iterator, must be called before readNext.
+     */
+    public void open() throws DbException, TransactionAbortedException {
+       this.currPage = -1;
     }
 
     @Override
     public void rewind() throws DbException, TransactionAbortedException {
-        this.currPage = 0;
-        this.HeapPageIdStart = new HeapPageId(this.heapFile.getId(), this.currPage);
-        try{
-            this.HeapPageStart = (HeapPage) Database.getBufferPool().getPage(this.tid, HeapPageIdStart, Permissions.READ_ONLY);
-            this.tupleIterat = HeapPageStart.iterator();
-        }
-        catch (TransactionAbortedException a){
-            System.out.println("Transaction Aborted Exception");
-        }
-        catch (DbException d){
-            System.out.println("Too many pages have been requested");
-        }
+        close();
+        open();
     }
 
     @Override
     protected Tuple readNext() throws DbException, TransactionAbortedException {
-        if(this.tupleIterat == null){
-            return null;
+        if(this.tupleIterat != null && !this.tupleIterat.hasNext()){
+            this.tupleIterat = null;
         }
-        if(this.tupleIterat.hasNext())
-            return this.tupleIterat.next();
-        else{
-            if(currPage + 1 < this.numPages){
-                this.currPage = this.currPage + 1;
-                this.HeapPageIdStart = new HeapPageId(this.heapFile.getId(), this.currPage);
-                try{
-                    this.HeapPageStart = (HeapPage) Database.getBufferPool().getPage(this.tid, HeapPageIdStart, Permissions.READ_ONLY);
-                    this.tupleIterat = HeapPageStart.iterator();
-                }
-                catch (TransactionAbortedException a){
-                    System.out.println("Transaction Aborted Exception");
-                }
-                catch (DbException d){
-                    System.out.println("Too many pages have been requested");
-                }
-                if(this.tupleIterat.hasNext())
-                    return this.tupleIterat.next();
-                else
-                    return null;
+        while(this.tupleIterat == null && this.currPage < this.heapFile.numPages() - 1) {
+            this.currPage = this.currPage + 1;
+            this.HeapPageIdStart = new HeapPageId(this.heapFile.getId(), this.currPage);
+            try {
+                this.HeapPageStart = (HeapPage) Database.getBufferPool()
+                        .getPage(this.tid, HeapPageIdStart, Permissions.READ_ONLY);
+                this.tupleIterat = HeapPageStart.iterator();
+            } catch (TransactionAbortedException a) {
+                System.out.println("Transaction Aborted Exception");
+            } catch (DbException d) {
+                System.out.println("Too many pages have been requested");
             }
-            else{
-                return null;
-            }
+            if (!this.tupleIterat.hasNext())
+                this.tupleIterat = null;
         }
+        if(this.tupleIterat == null) return null;
+        return this.tupleIterat.next();
     }
 
     @Override
@@ -90,7 +61,7 @@ public class HeapFileIterator extends AbstractDbFileIterator{
         // Ensures that a future call to next() will fail
         super.close();
         this.tupleIterat = null;
-        this.currPage = 0;
+        this.currPage = Integer.MAX_VALUE;
 
     }
 }

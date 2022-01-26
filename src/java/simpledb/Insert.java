@@ -45,7 +45,6 @@ public class Insert extends Operator {
         this.td = new TupleDesc(typeAr, fieldAr);
     }
 
-    // After debugging, we noticed that getTupleDesc is for the counter - fetchNext()
     public TupleDesc getTupleDesc() {
         // some code goes here
         return this.td;
@@ -55,7 +54,7 @@ public class Insert extends Operator {
         // some code goes here
         super.open();
         this.child.open();
-        this.flagFetch = false;  // set flag for fetchNext() method to true
+        this.flagFetch = false;  // set flag for fetchNext() method
     }
 
     public void close() {
@@ -85,7 +84,7 @@ public class Insert extends Operator {
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
         // some code goes here
         int counterInserted = 0;
-        if(!this.flagFetch){
+        if(!this.flagFetch){  // check if fetchNext method is called more than once
             while(this.child.hasNext()){
                 // we should use BufferPool.insertTuple()
                 try {

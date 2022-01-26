@@ -361,7 +361,6 @@ public class HeapPage implements Page {
         // not necessary for lab1
         int byteNumber = (int) Math.ceil(i / 8);
         int bitNumber = i % 8;
-        // TODO /*********************************************************************************************************************************/
         if (isSlotUsed(i) ^ value){
             header[byteNumber] ^= (1 << bitNumber);
         }
