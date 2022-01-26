@@ -43,16 +43,13 @@ java.util.NoSuchElementException
 simpledb.TransactionAbortedException
 ||:simpledb.Join
 simpledb.Tuple
-java.util.List
 simpledb.OpIterator
 simpledb.Operator
 simpledb.DbException
-[Lsimpledb.OpIterator;
 java.util.NoSuchElementException
 simpledb.TupleDesc
 simpledb.Join
 simpledb.JoinPredicate
-java.util.ArrayList
 simpledb.TransactionAbortedException
 ||:simpledb.StringAggregator
 simpledb.StringAggregator$1

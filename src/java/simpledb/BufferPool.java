@@ -263,21 +263,18 @@ public class BufferPool {
     private synchronized  void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
-        ArrayList<HeapPageId> dirtyHeapPagesId = new ArrayList<>();
-        HeapPageId hpid;
+        ArrayList<HeapPageId> pagesId = new ArrayList<>();
         for(PageId pid : this.pages.keySet()){
-            hpid = (HeapPageId) pid;
-            if(this.pages.get(hpid).isDirty() != null)
-                dirtyHeapPagesId.add((HeapPageId) pid);
+            pagesId.add((HeapPageId) pid);
         }
         // pick a random page to evict
         double randNum = Math.random();
         // map it between 0 and length of the arraylist of dirty pages
-        randNum = randNum * dirtyHeapPagesId.size();
+        randNum = randNum * pagesId.size();
         // cast to int to get the index of the page to evict
         int randInd = (int) randNum;
-        if(dirtyHeapPagesId.size() != 0){
-            PageId idToEvict = dirtyHeapPagesId.get(randInd);
+        if(pagesId.size() != 0){
+            PageId idToEvict = pagesId.get(randInd);
             // flush and discard the page
             try{
                 flushPage(idToEvict);  // handle IOException
