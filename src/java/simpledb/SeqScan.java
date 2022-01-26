@@ -88,6 +88,7 @@ public class SeqScan implements OpIterator {
         //try {
         this.h = (HeapFile) Database.getCatalog().getDatabaseFile(this.tableid);
         this.it = this.h.iterator(this.tid);
+
         it.open();
     }
 
@@ -104,6 +105,7 @@ public class SeqScan implements OpIterator {
     public TupleDesc getTupleDesc() {
         // some code goes here
         String prefix = this.tableAlias + ".";
+        this.h = (HeapFile) Database.getCatalog().getDatabaseFile(this.tableid);
         int numFields = this.h.getTupleDesc().numFields();
         Type[] fieldTypes = new Type[numFields];
         String[] fieldNames = new String[numFields];

@@ -20,7 +20,7 @@ public class Join extends Operator {
     /**
      * Constructor. Accepts two children to join and the predicate to join them
      * on
-     * 
+     *
      * @param p
      *            The predicate to use to join the children
      * @param child1
@@ -104,14 +104,14 @@ public class Join extends Operator {
      * <p>
      * For example, if one tuple is {1,2,3} and the other tuple is {1,5,6},
      * joined on equality of the first column, then this returns {1,2,3,1,5,6}.
-     * 
+     *
      * @return The next matching tuple.
      * @see JoinPredicate#filter
      */
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
         // some code goes here
         TupleDesc td = this.getTupleDesc();
-        while(this.child1.hasNext()) {
+        while(notEnd || this.child1.hasNext()) {
             if(!notEnd){
                 this.t1 = this.child1.next();
             }
@@ -132,10 +132,10 @@ public class Join extends Operator {
     @Override
     public OpIterator[] getChildren() {
         // some code goes here
-        List<OpIterator> toReturn = new ArrayList<>();
-        toReturn.add(this.child1);
-        toReturn.add(this.child2);
-        return (OpIterator[]) toReturn.toArray();
+        OpIterator[] toReturn = new OpIterator[2];
+        toReturn[0] = this.child1;
+        toReturn[1] = this.child2;
+        return toReturn;
     }
 
     @Override

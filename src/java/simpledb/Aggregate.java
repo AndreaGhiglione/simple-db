@@ -48,10 +48,16 @@ public class Aggregate extends Operator {
         this.typeGroup = this.child.getTupleDesc().getFieldType(this.afield);
         switch (this.typeGroup){
             case INT_TYPE:
-                this.agg = new IntegerAggregator(this.gfield, this.child.getTupleDesc().getFieldType(this.gfield), this.afield, this.aop);
+                if(this.gfield != -1)
+                    this.agg = new IntegerAggregator(this.gfield, this.child.getTupleDesc().getFieldType(this.gfield), this.afield, this.aop);
+                else
+                    this.agg = new IntegerAggregator(this.gfield, null, this.afield, this.aop);
                 break;
             case STRING_TYPE:
-                this.agg = new StringAggregator(this.gfield, this.child.getTupleDesc().getFieldType(this.gfield), this.afield, this.aop);
+                if(this.gfield != -1)
+                    this.agg = new StringAggregator(this.gfield, this.child.getTupleDesc().getFieldType(this.gfield), this.afield, this.aop);
+                else
+                    this.agg = new StringAggregator(this.gfield, null, this.afield, this.aop);
                 break;
         }
     }
